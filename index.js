@@ -1,6 +1,5 @@
 const express = require('express');
 const parser = require('body-parser');
-const fs = require("fs");
 const dns = require('dns');
 const app = express();
 const server = require('http').createServer(app);
@@ -15,6 +14,13 @@ app.set('view engine', 'ejs');
 dns.lookup(HOSTNAME, (err, result)=> {
   server_ip = result;
 });
+
+// iTunes XML, TODO: change to let user choose songs, or xml libraries
+const $HOME = process.env.HOME || '';
+const XML = `${$HOME}/Music/iTunes/iTunes\ Music\ Library.xml`;
+const iTunes_XML_Parser = require('./itunesxml');
+let iTunes_XML = new iTunes_XML_Parser.itunes_xml(XML);
+let music_data =  iTunes_XML.getSongs();
 
 // https://gist.github.com/qiao/1626318 modified to get ipv4
 function getClientIp(req) {
@@ -40,12 +46,11 @@ function getClientIp(req) {
 
 app.get('/', (req, res)=>{
   const clientIP = getClientIp(req);
-  // should render different pages
-  if(clientIP == server_ip){
-    res.render('pages/index', {ip: (clientIP)});
+  if(clientIP === server_ip){
+    res.render('pages/index_host', {ip: clientIP, songs: music_data});
   }
   else {
-    res.render('pages/index', {ip: clientIP});
+    res.render('pages/index_client', {ip: clientIP, songs: music_data});
   }
 });
 

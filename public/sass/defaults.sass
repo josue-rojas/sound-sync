@@ -1,0 +1,47 @@
+@import 'colors.sass'
+
+html
+  -webkit-box-sizing: border-box
+  box-sizing: border-box
+  font-family: sans-serif
+  line-height: 1.15
+  -webkit-text-size-adjust: 100%
+  -ms-text-size-adjust: 100%
+  -ms-overflow-style: scrollbar
+  -webkit-tap-highlight-color: transparent
+
+body
+  margin: 0
+  font-size: 1rem
+  font-weight: 400
+  line-height: 1.5
+  background-color: $main-color
+  color: $font-main-color
+
+*, *::before, *::after
+  box-sizing: inherit
+
+.button
+  background-color: $button-main-color
+  padding: 7px 5px
+  width: 90px
+  transition: 300ms
+  margin: 5px
+  cursor: pointer
+  text-align: center
+  text-decoration: none
+  color: $font-main-color
+  &:hover
+    color: $link-hover-color
+    background-color: $button-hover-color
+
+.title
+  font-size: 1.5rem
+
+.link
+  color: $font-main-color
+  transition: 300ms
+  cursor: pointer
+  text-decoration: none
+  &:hover
+    color: $link-hover-color
