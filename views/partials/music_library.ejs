@@ -1,0 +1,7 @@
+<div class='music_library'>
+  <% for(let i = 0; i < songs.length; i++){ %>
+    <div class='song' data-src='<%= songs[i]['Location'] %>'>
+      <div class='song_title'><%= songs[i]['Name'] %></div>
+    </div>
+  <% } %>
+</div>
