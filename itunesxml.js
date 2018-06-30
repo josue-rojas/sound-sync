@@ -71,12 +71,12 @@ class itunes_xml {
   constructor(location){
     this.location = location;
     let songs_object = [];
-    this.songs = [];
     let $this = this
     // fileSync might be fine here (or not), but when changing the file and reading the new one should be async
     let data = fs.readFileSync(location);
     xml2js(data, {explicitArray: false, preserveChildrenOrder: true}, function(err, result) {
       const songsXML = result.plist.dict.dict.dict;
+      let songs_object = {};
       for(let i = 0; i < songsXML.length; i++){
         let keys = songsXML[i].key;
         // in here i am making a song object that contains all it's info that it can be provided by the keys
@@ -87,7 +87,6 @@ class itunes_xml {
           "date": 0,
           // "true": 0 // booleans are true or they dont exist (false), positions shouldnt change
         }
-        // TODO: songOBJ should be 1928: {} where the number represesnts the Track ID for faster access and sorting purposes
         for(let j = 0; j < keys.length; j++){
           // first look up the type the key is
           const keyType = ITUNES_XML_TYPES[keys[j]];
@@ -102,11 +101,11 @@ class itunes_xml {
             typeCurr[keyType] += 1;
           }
         }
-        songs_object.push(songOBJ);
+        const id = songOBJ['Track ID'];
+        songs_object[id]= songOBJ;
       }
       $this.songs = songs_object;
     });
-    // console.log('hello',this.songs);
   }
 
 
@@ -116,7 +115,10 @@ class itunes_xml {
 
 }
 
+// test
+// const $HOME = process.env.HOME || '';
 // const a = new itunes_xml(`${$HOME}/Music/iTunes/iTunes\ Music\ Library.xml`)
+// console.log(a.getSongs());
 
 
 module.exports.itunes_xml = itunes_xml;

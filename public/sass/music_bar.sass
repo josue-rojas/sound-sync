@@ -1,0 +1,78 @@
+$controls-color: #333333
+// space should be set automatically, but in the meantime this will do
+.music_bar_space
+  height: 53px
+.music_bar
+  width: 100%
+  display: flex
+  flex-direction: row
+  background: linear-gradient(#d6d4d9, #bfbfbf)
+  border-bottom: 1px solid darkgray
+  position: fixed
+  // justify-content: flex-end
+  top: 0
+  .controls
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+    // TODO: make info-box centered, maybe divide the music_bar by columns like bootstrap
+    margin-left: 40px
+    // should probably replace controls with svgs..
+    .prev
+      display: inline-block
+      margin: auto 3px
+      width: 20px
+      height: 20px
+      cursor: pointer
+      .triangle
+        position: absolute
+        display: inline-block
+        border-bottom: 10px solid transparent
+        border-left: 10px solid transparent
+        border-right: 10px solid $controls-color
+        border-top: 10px solid transparent
+        &:first-child
+          margin-left: -10px
+    .next
+      display: inline-block
+      margin: auto 3px
+      width: 20px
+      height: 20px
+      cursor: pointer
+      .triangle
+        position: absolute
+        display: inline-block
+        border-bottom: 10px solid transparent
+        border-left: 10px solid $controls-color
+        border-right: 10px solid transparent
+        border-top: 10px solid transparent
+        &:first-child
+          margin-left: 10px
+    .pause
+      display: inline-block
+      margin: auto 5px
+      height: 28px
+      cursor: pointer
+      .line
+        display: inline-block
+        width: 7px
+        height: 28px
+        background-color: $controls-color
+  .info-box
+    padding: 5px 0
+    border-left: 1px solid darkgray
+    border-right: 1px solid darkgray
+    background-color: #efefef
+    min-width: 400px
+    max-width: 400px
+    margin: auto
+    text-align: center
+    .current_playing_title
+      color: #454545
+    .current_playing_artist
+      color: gray
+  // this is suppost to center the info-box
+  // this is not good for mobile design since 120 is pretty wide
+  .last-column
+    margin-right: 120px

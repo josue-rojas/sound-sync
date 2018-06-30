@@ -44,8 +44,10 @@ function getClientIp(req) {
   return ipAddress;
 };
 
+// TODO should do pagination for when there is  alot of songs so it would be smoother in the browser (especially the styling)
 app.get('/', (req, res)=>{
   const clientIP = getClientIp(req);
+  console.log(`this ip ${server_ip} the browser ip ${clientIP}`)
   if(clientIP === server_ip){
     res.render('pages/index_host', {ip: clientIP, songs: music_data});
   }

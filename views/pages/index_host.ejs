@@ -1,9 +1,11 @@
 <% title = 'Host' %>
 <% css = 'css/index_host.css' %>
-<% js = '' %>
+<% js = 'js/music_player.js' %>
 
 <%- include ../partials/header %>
 <body>
-  <%= ip %>
-  <%- include ../partials/music_library %>
+  <script>
+  const thisIP = '<%= ip %>'
+  </script>
+  <%- include ../partials/music_player %>
 </body>

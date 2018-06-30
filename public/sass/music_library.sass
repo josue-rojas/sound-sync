@@ -1,4 +1,56 @@
 .music_library
+  .column
+    display: inline-block
+    height: 100%
+    padding-left: 5px
+    display: flex
+    align-items: center
+    justify-content: space-between
+    white-space: nowrap
+  .hover-column
+    width: 17px
+  .title-column, .album-column
+    overflow: scroll
+    width: calc(33% - 12px)
+    max-width: calc(33% - 12px)
+    // TODO: should figure out something that looks better
+    white-space: nowrap
+  .song-info-wrapper
+    height: 32px
+    position: relative
+    .song-info
+      background-color: white
+      position: fixed
+      height: 32px
+      width: 100%
+      border-bottom: 1px solid #cecece
+      display: flex
+      flex-direction: row
+      .line
+        border-right: 1px solid #cecece
+        height: 80%
+        margin: auto 0
+      .hover-column
+        width: 27px
   .song
+    height: 32px
+    display: flex
+    flex-direction: row
+    align-items: center
+    .hover-marker-wrapper
+      height: 100%
+      margin: 0 5px
+      display: flex
+      justify-content: center
+      align-items: center
+      .hover-marker
+        width: 12px
+        height: 12px
+        border-radius: 100%
     &:nth-child(2n)
       background-color: #efefef
+    &:hover
+      cursor: pointer
+      .hover-marker-wrapper
+        .hover-marker
+          background-color: gray

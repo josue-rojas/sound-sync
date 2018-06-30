@@ -1,7 +1,30 @@
 <div class='music_library'>
-  <% for(let i = 0; i < songs.length; i++){ %>
-    <div class='song' data-src='<%= songs[i]['Location'] %>'>
-      <div class='song_title'><%= songs[i]['Name'] %></div>
+  <!-- TODO need to check if things exist some may not have album, etc -->
+  <div class='song-info-wrapper'>
+    <div class='song-info'>
+      <div class='hover-column column'>.
+        <div class='line'></div>
+      </div>
+      <div class='title-column column'>
+        Title
+        <div class='line'></div>
+      </div>
+      <div class='album-column column'>
+        Album
+        <div class='line'></div>
+      </div>
     </div>
-  <% } %>
+  </div>
+  <% Object.keys(songs).forEach((song)=>{ %>
+    <div class='song '
+      data-src='<%= songs[song]["Location"] %>'
+      data-name='<%= songs[song]["Name"] %>'
+      data-album='<%= songs[song]["Album"] %>'
+      data-artist='<%= songs[song]["Artist"] %>'
+      data-id='<%= song %>'>
+      <div class='hover-marker-wrapper hover-column column'><div class='hover-marker'></div></div>
+      <div class='song_title title-column column'><%= songs[song]['Name'] %></div>
+      <div class='album_title album-column column'><%= songs[song]['Album'] %></div>
+    </div>
+  <% }) %>
 </div>
