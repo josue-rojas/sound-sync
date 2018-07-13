@@ -1,10 +1,11 @@
-<% title = 'Client' %>
-<% css = '' %>
-<% js = '' %>
+<% title = 'Stream' %>
+<% css = 'css/index_client.css' %>
+<% js = 'js/index_client.js' %>
 
 <%- include ../partials/header %>
 <body>
-  Hello
-  <%= ip %>
-  <%- include ../partials/music_library %>
+  <script>
+    const IP = '<%= ip %>';
+  </script>
+  <%- include ../partials/stream_bar %>
 </body>

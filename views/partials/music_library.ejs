@@ -1,8 +1,10 @@
 <div class='music_library'>
   <!-- TODO need to check if things exist some may not have album, etc -->
+  <!-- TODO a table might work better to organize this and display it -->
   <div class='song-info-wrapper'>
     <div class='song-info'>
-      <div class='hover-column column'>.
+      <div class='hover-column column'>
+        <div class='space'></div>
         <div class='line'></div>
       </div>
       <div class='title-column column'>
@@ -15,7 +17,7 @@
       </div>
     </div>
   </div>
-  <% Object.keys(songs).forEach((song)=>{ %>
+  <% Object.keys(songs).every((song, index)=>{ %>
     <div class='song '
       data-src='<%= songs[song]["Location"] %>'
       data-name='<%= songs[song]["Name"] %>'
@@ -23,8 +25,8 @@
       data-artist='<%= songs[song]["Artist"] %>'
       data-id='<%= song %>'>
       <div class='hover-marker-wrapper hover-column column'><div class='hover-marker'></div></div>
-      <div class='song_title title-column column'><%= songs[song]['Name'] %></div>
+      <div class='song_title title-column column'><%= songs[song]['Name'] %><%=index%></div>
       <div class='album_title album-column column'><%= songs[song]['Album'] %></div>
     </div>
-  <% }) %>
+  <% return index  < 25}) %>
 </div>
