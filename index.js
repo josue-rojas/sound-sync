@@ -1,10 +1,12 @@
 const express = require('express');
 const parser = require('body-parser');
 const dns = require('dns');
+const fs = require('fs')
 const app = express();
 const server = require('http').createServer(app);
 const PORT = process.env.PORT || 8080;
 const HOSTNAME = require('os').hostname();
+const io = require('socket.io')(server);
 let server_ip = null; //set later with dns lookup
 
 app.use(express.static('public/'));
@@ -15,13 +17,16 @@ dns.lookup(HOSTNAME, (err, result)=> {
   server_ip = result;
 });
 
+
 // iTunes XML, TODO: change to let user choose songs, or xml libraries
 const $HOME = process.env.HOME || '';
 const XML = `${$HOME}/Music/iTunes/iTunes\ Music\ Library.xml`;
-const iTunes_XML_Parser = require('./itunesxml');
+const iTunes_XML_Parser = require('./modules/itunesxml');
 let iTunes_XML = new iTunes_XML_Parser.itunes_xml(XML);
 let music_data =  iTunes_XML.getSongs();
+let curr_song_id = -1;
 
+// TODO: thinking of seperating the ip stuff into a module and in that it should handle if ips match (just to reduce code here and make it more clear)
 // https://gist.github.com/qiao/1626318 modified to get ipv4
 function getClientIp(req) {
   var ipAddress;
@@ -47,13 +52,85 @@ function getClientIp(req) {
 // TODO should do pagination for when there is  alot of songs so it would be smoother in the browser (especially the styling)
 app.get('/', (req, res)=>{
   const clientIP = getClientIp(req);
-  console.log(`this ip ${server_ip} the browser ip ${clientIP}`)
-  if(clientIP === server_ip){
-    res.render('pages/index_host', {ip: clientIP, songs: music_data});
+  const data = {
+    ip: clientIP,
+    songs: music_data,
+    curr_song_id: curr_song_id
+  };
+  if(clientIP === server_ip || clientIP === '::1'){
+    res.render('pages/index_host', data);
   }
   else {
-    res.render('pages/index_client', {ip: clientIP, songs: music_data});
+    res.render('pages/index_client', data);
   }
+});
+
+app.get('/stream_page', (req, res)=>{
+  const clientIP = getClientIp(req);
+  const data = {
+    ip: clientIP,
+    songs: music_data,
+    curr_song_id: curr_song_id
+  };
+  res.render('pages/index_client', data);
+});
+
+// endpoint to get current streamed song
+app.get('/stream', (req, res)=>{
+  if(curr_song_id == -1) return
+  const path = music_data[curr_song_id]['Location'].substring(7).replace(/%20/g, ' ');
+  const stat = fs.statSync(path)
+  const fileSize = stat.size
+  const range = req.headers.range
+  // console.log((range || 'not'));
+  if (range) {
+    const parts = range.replace(/bytes=/, "").split("-")
+    const start = parseInt(parts[0], 10)
+    const end = parts[1]
+      ? parseInt(parts[1], 10)
+      : fileSize-1
+
+    const chunksize = (end-start)+1
+    const file = fs.createReadStream(path, {start, end})
+    const head = {
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunksize,
+      'Content-Type': 'audio/*',
+    }
+
+    res.writeHead(206, head)
+    file.pipe(res)
+  } else {
+    const head = {
+      'Content-Length': fileSize,
+      'Content-Type': 'audio/*',
+    }
+    res.writeHead(200, head)
+    fs.createReadStream(path).pipe(res)
+  }
+
+});
+
+// socket.io on
+io.on('connection', (socket)=>{
+  // change song
+  socket.on('change song', (id)=>{
+    curr_song_id = id;
+    // TODO: just send artist and title (relevant information)
+    socket.broadcast.emit('song change', music_data[id]);
+  });
+
+  socket.on('pause play', (pause)=>{
+    socket.broadcast.emit('pause play', pause)
+  })
+
+  socket.on('audio time', (song_time, curr_time)=>{
+    console.log(curr_time)
+    socket.broadcast.emit('audio time', song_time, curr_time);
+    // console.log('curr time', time);
+  })
+
 });
 
 

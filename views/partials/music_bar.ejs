@@ -1,10 +1,11 @@
 <div class='music_bar_space'></div>
-<div class='music_bar'>
+<div class='music_bar <%= stream_bar %>'>
   <div class='controls'>
     <div class='prev'>
       <div class='triangle'></div>
       <div class='triangle'></div>
     </div>
+    <!-- TODO should change when playing and pausing -->
     <div class='pause'>
       <div class='line'></div>
       <div class='line'></div>
@@ -15,8 +16,12 @@
     </div>
   </div>
   <div class='info-box'>
-    <div class='current_playing_title'>None</div>
-    <div class='current_playing_artist'>None</div>
+    <% let title = 'None' %>
+    <% let artist = 'None' %>
+    <% if(curr_song_id != -1){ title = songs[curr_song_id]['Name']; artist = songs[curr_song_id]['Artist'];  } %>
+    <div class='current_playing_title'><%= title %></div>
+    <div class='current_playing_artist'><%= artist %></div>
   </div>
   <div class='last-column'></div>
 </div>
+<%- include ./audio_stream %>

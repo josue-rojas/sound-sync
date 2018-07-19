@@ -85,7 +85,7 @@ class itunes_xml {
           "string": 0,
           "integer": 0,
           "date": 0,
-          // "true": 0 // booleans are true or they dont exist (false), positions shouldnt change
+          // "true": 0 // booleans are true or they dont exist (false), positions shouldnt change or doesnt matter
         }
         for(let j = 0; j < keys.length; j++){
           // first look up the type the key is
@@ -107,7 +107,6 @@ class itunes_xml {
       $this.songs = songs_object;
     });
   }
-
 
   getSongs(){
     return this.songs;
