@@ -52,17 +52,27 @@ function getClientIp(req) {
 // TODO should do pagination for when there is  alot of songs so it would be smoother in the browser (especially the styling)
 app.get('/', (req, res)=>{
   const clientIP = getClientIp(req);
+  const data = {
+    ip: clientIP,
+    songs: music_data,
+    curr_song_id: curr_song_id
+  };
   if(clientIP === server_ip || clientIP === '::1'){
-    res.render('pages/index_host', {ip: clientIP, songs: music_data});
+    res.render('pages/index_host', data);
   }
   else {
-    res.render('pages/index_client', {ip: clientIP, songs: music_data});
+    res.render('pages/index_client', data);
   }
 });
 
 app.get('/stream_page', (req, res)=>{
   const clientIP = getClientIp(req);
-  res.render('pages/index_client', {ip: clientIP});
+  const data = {
+    ip: clientIP,
+    songs: music_data,
+    curr_song_id: curr_song_id
+  };
+  res.render('pages/index_client', data);
 });
 
 // endpoint to get current streamed song
@@ -107,8 +117,20 @@ io.on('connection', (socket)=>{
   // change song
   socket.on('change song', (id)=>{
     curr_song_id = id;
-    socket.broadcast.emit('song change');
+    // TODO: just send artist and title (relevant information)
+    socket.broadcast.emit('song change', music_data[id]);
+  });
+
+  socket.on('pause play', (pause)=>{
+    socket.broadcast.emit('pause play', pause)
   })
+
+  socket.on('audio time', (song_time, curr_time)=>{
+    console.log(curr_time)
+    socket.broadcast.emit('audio time', song_time, curr_time);
+    // console.log('curr time', time);
+  })
+
 });
 
 
