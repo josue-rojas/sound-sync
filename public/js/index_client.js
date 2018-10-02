@@ -36,19 +36,28 @@ $( document ).ready(function() {
   });
   // let i = 0;
   socket.on('audio time', (song_time, curr_time)=>{
-    let timeLapse = new Date() - new Date(curr_time);
+    let timeLapse = (new Date() - new Date(curr_time))/1000;
     // console.log(song_time)
-    timeLapse /= 1000;
+    // console.log(audio.readyState)
+    // timeLapse /= 1000;
     // console.log(timeLapse+.001)
     // // get seconds
     // var seconds = Math.round(timeLapse);
     // console.log(seconds + " seconds");
-    // const difference = audio.currentTime-(song_time+timeLapse )
+    const difference = audio.currentTime-song_time+timeLapse
 
     if(i == 0 && !isPause){
-      // console.log('change time')
+      console.log(`change time ${difference}`)
+      console.log(difference > -.001);
+      console.log(difference < .001);
+      audio.currentTime = song_time+timeLapse+0.1;
+      if(difference < .001 && difference > -.001){
+        i++;
+      }
+    }
+    else if(isPause){
       audio.currentTime = song_time+timeLapse;
-      i++;
+
     }
     // audio.currentTime = song_time;
 
